@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2016-10-10T13:49:25.000Z</updated>
+  <updated>2016-10-10T14:29:07.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,51 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>css逐帧动画</title>
+    <link href="http://yoursite.com/2016/08/07/animation-step/"/>
+    <id>http://yoursite.com/2016/08/07/animation-step/</id>
+    <published>2016-08-07T07:00:58.000Z</published>
+    <updated>2016-10-10T14:29:07.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们经常使用css3中的animation动画，比如这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">.fadeIn&#123;</div><div class="line">  animation: fadeIn .5s ease 1s both;</div><div class="line">&#125;</div><div class="line">@keyframes fadeIn&#123;</div><div class="line">  from&#123;</div><div class="line">    opacity:0;</div><div class="line">  &#125;</div><div class="line">  to&#123;</div><div class="line">    opacity:1</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>这样就实现了延时1s，一共0.5s的淡入动画。其中ease是animation-timing-function的默认值。<br>animation-timing-function使用了三次贝塞尔（Cubic Bezier）函数生成速度曲线，可以让我们的动画产生平滑的过渡。<br>但是有的时候我们并不想要平滑的过渡，比如想要实现下面小人跑动的效果，该怎么实现呢？</p>
+<img src="/2016/08/07/animation-step/people.gif" alt="animation-step" title="animation-step">
+<ul>
+<li>我们可以将小人跑动的动作分解，拼成下面的雪碧图：<img src="/2016/08/07/animation-step/people.png" alt="animation-step" title="animation-step"></li>
+<li>通过设置不同的background-position设置不同时间小人不通的动作</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">@keyframes run &#123;</div><div class="line">  0% &#123;</div><div class="line">    background-position: 0 0</div><div class="line">  &#125;</div><div class="line">  10%&#123;</div><div class="line">    background-position: -100% 0</div><div class="line">  &#125;</div><div class="line">  20%&#123;</div><div class="line">    background-position: -200% 0</div><div class="line">  &#125;</div><div class="line">  30%&#123;</div><div class="line">    background-position: -300% 0</div><div class="line">  &#125;</div><div class="line">  40%&#123;</div><div class="line">    background-position: -400% 0</div><div class="line">  &#125;</div><div class="line">  50%&#123;</div><div class="line">    background-position: 0 -100%</div><div class="line">  &#125;</div><div class="line">  60%&#123;</div><div class="line">    background-position: -100% -100%</div><div class="line">  &#125;</div><div class="line">  70%&#123;</div><div class="line">    background-position: -200% -100%</div><div class="line">  &#125;</div><div class="line">  80%&#123;</div><div class="line">    background-position: -300% -100%</div><div class="line">  &#125;</div><div class="line">  90%&#123;</div><div class="line">    background-position: -400% -100%</div><div class="line">  &#125;</div><div class="line">  100%&#123;</div><div class="line">    background-position: 0 0</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>用animation让动画动起来吧，想让动画每帧动，而不带中间的过渡效果animation-timing-function要设置成steps函数</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">.people&#123;</div><div class="line">    width: 100px;</div><div class="line">    height: 114px;</div><div class="line">    background: url(../images/people.png);</div><div class="line">    -webkit-animation:run 1s steps(1) 0s infinite both;</div><div class="line">    animation:run 1s steps(1) 0s infinite both;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<img src="/2016/08/07/animation-step/people.gif" alt="animation-step" title="animation-step">
+<ul>
+<li>小人动起来啦！</li>
+</ul>
+<p>或者更简单，把雪碧图拼成这样：</p>
+<img src="/2016/08/07/animation-step/people2.png" alt="animation-step" title="animation-step">
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">.people&#123;</div><div class="line">    width: 100px;</div><div class="line">    height: 114px;</div><div class="line">    background: url(../images/people.png);</div><div class="line">    -webkit-animation:run 1s steps(9) 0s infinite both;</div><div class="line">    animation:run 1s steps(9) 0s infinite both;</div><div class="line">&#125;</div><div class="line"></div><div class="line">@-webkit-keyframes run &#123;</div><div class="line">  to&#123;</div><div class="line">    background-position: -900% 0</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>steps函数接受两个参数，第一个参数会根据你指定的步进数量，把整个动画切分为多帧，第二个可选的参数可以是 start 或 end(默认)。这个参数用于指定动画在每个循环周期的什么位置发生帧的切换动作。还可以使用 step-start 和 step-end 这样的简写属性,它们分别等同于 steps(1, start) 和 steps(1, end)<br>很多时候我们的gif动画都可以直接用css效果实现，快来试试吧！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我们经常使用css3中的animation动画，比如这样：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;.fadeIn&amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;  animation: fadeIn .5s ease 1s both;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;@keyframes fadeIn&amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;  from&amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    opacity:0;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;  &amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;  to&amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    opacity:1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;  &amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+      <category term="原创" scheme="http://yoursite.com/categories/%E5%8E%9F%E5%88%9B/"/>
+    
+    
+      <category term="css" scheme="http://yoursite.com/tags/css/"/>
+    
+  </entry>
   
   <entry>
     <title>如何用webpack打包一个网站应用？</title>
@@ -59,17 +104,17 @@
   
   <entry>
     <title>你可能不知道的css</title>
-    <link href="http://yoursite.com/2016/07/04/2016-07-04-css/"/>
-    <id>http://yoursite.com/2016/07/04/2016-07-04-css/</id>
+    <link href="http://yoursite.com/2016/07/04/css/"/>
+    <id>http://yoursite.com/2016/07/04/css/</id>
     <published>2016-07-04T09:58:39.000Z</published>
-    <updated>2016-10-10T13:52:15.000Z</updated>
+    <updated>2016-10-10T14:53:17.000Z</updated>
     
     <content type="html"><![CDATA[<p>最近在学习《css揭秘》这本书，作者是w3c工作组的特邀专家，设计css语言的委员之一。这本书实现了很多常见的、我们在写网页的时候不好实现的效果。阅读这本书，经常感叹“原来还可以这样”！让我们一起来学习一些效果吧！<br><a id="more"></a><br>书里提到编写可维护的css最大要素是<strong>尽量减少改动时要编辑的地方</strong><br>    比如一个按钮，我们可能写一堆font-size,line-height,padding的像素值，如果按钮需要放大，这些值都需要修改，如果用em做单位，可能改动的地方就小了</p>
 <p>1.半透明边框<br>    假设我们想给一个容器设置一层白色背景和一道半透明白色边框,body的背景会从它的半透明边框透上来。我们最开始的尝试可能是这样的:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">border: 10px solid rgba(#255,#255,#255,.5);background: white;</div></pre></td></tr></table></figure></p>
 <pre><code>但是我们会发现完全不透明！！
 我们可以使用css3的background-clip来实现我们想要的效果
 </code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">width: 50px;</div><div class="line">height: 50px;</div><div class="line">background-color: white;</div><div class="line">border: 10px dotted rgba(#255,#255,#255,.5);</div><div class="line">background-clip: padding-box;</div></pre></td></tr></table></figure>
-<p>我们把border设成dotted 可以看到这样的效果<br><img src="http://upload-images.jianshu.io/upload_images/1287935-1450312c36e37072.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="半透明背景"></p>
+<p>我们把border设成dotted 可以看到这样的效果<br><img src="/2016/07/04/css/demo1.png" alt="css" title="css"></p>
 <p>background-clip是背景的范围，默认是border-box，我们把它设成padding-box，背景会沿着内边距被切掉。</p>
 <p>2.多重边框</p>
 <p>如果我们要给元素包多层边框，常常要加很多层标签，这样会污染我们的结构，我们可以思考其他的方案</p>
@@ -77,16 +122,16 @@
 <li>box-shadow方案<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">background: yellowgreen;</div><div class="line">box-shadow: 0 0 0 10px #655,0 0 0 15px deeppink;</div></pre></td></tr></table></figure>
 </li>
 </ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1287935-9c3c27700a295d66.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="box-shadow方案"></p>
+<img src="/2016/07/04/css/demo2.png" alt="css" title="css">
 <ul>
 <li>outline方案<br>大多数情况下，你可能只需要两层边框，outline可以使用虚线，outline-offset可以使用负值，实现缝边效果。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">background: yellowgreen;</div><div class="line"> border: 10px solid #655;</div><div class="line"> outline: 1px dashed #fff;</div><div class="line"> outline-offset: -5px;</div></pre></td></tr></table></figure>
 </li>
 </ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1287935-d5f5fbf9e004a28d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="outline方案"></p>
+<img src="/2016/07/04/css/demo3.png" alt="css" title="css">
 <p>不过，outline边框不一定会贴合 border-radius 属性产生的圆角，且只适用于双层边框的场景</p>
 <p>3.灵活的背景定位<br>如果我们想让背景在容器的右下方，我们可能会用background-position:right bottom; 如果想让背景距离右下角宽高各20px呢？你知道怎么办吗？<br>css3扩展了background-position属性，可以写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">background-position:right 20px bottom 20px;</div></pre></td></tr></table></figure></p>
 <p>或者直接指定padding，然后background-origin: content-box;<br>background-origin是css3新增的属性，默认是padding-box，指定了背景的位置。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1287935-29cafce502bbe965.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="灵活的背景定位"></p>
+<img src="/2016/07/04/css/demo4.png" alt="css" title="css">
 <p>以上例子多是css3的属性，可能有兼容性问题，不过为我们提供了好的思路，也可以写回退方案。书里精彩的内容更多，大家也去看看吧！</p>
 ]]></content>
     
@@ -105,19 +150,18 @@
   
   <entry>
     <title>背景缺一部分的实现方式</title>
-    <link href="http://yoursite.com/2016/04/07/2016-04-07-background/"/>
-    <id>http://yoursite.com/2016/04/07/2016-04-07-background/</id>
+    <link href="http://yoursite.com/2016/04/07/background/"/>
+    <id>http://yoursite.com/2016/04/07/background/</id>
     <published>2016-04-07T09:58:39.000Z</published>
-    <updated>2016-10-10T13:52:43.000Z</updated>
+    <updated>2016-10-10T14:49:11.000Z</updated>
     
     <content type="html"><![CDATA[<p>最近接到一个需求，要实现背景缺两个半圆，而且缺的半圆是透明的，要显示出下面的图片。<br>思考一下，可以用css3的渐变来实现。<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">  &lt;style&gt;</div><div class="line">  #demo .container&#123;</div><div class="line">    background-color: yellow;</div><div class="line">    width: 500px;</div><div class="line">    height: 500px;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  #demo .container-nav&#123;</div><div class="line">    background-color: red;</div><div class="line">    width: 300px;</div><div class="line">    height: 300px;</div><div class="line">    position: relative;</div><div class="line">    background: -webkit-radial-gradient(0px 150px ,circle,transparent 0%,transparent 50px,#ff0000 50px)</div><div class="line">  &#125;</div><div class="line">  &lt;/style&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body id=&quot;demo&quot;&gt;</div><div class="line">  &lt;div class=&quot;container&quot;&gt;</div><div class="line">    &lt;div class=&quot;container-nav&quot;&gt;&lt;/div&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
-<p><img src="http://7xsq2c.com2.z0.glb.clouddn.com/demo1.png" alt="demo1"></p>
+<img src="/2016/04/07/background/demo1.png" alt="background" title="background">
 <p>利用渐变，从透明到红色的径向渐变可以模拟出缺一个半圆的效果。</p>
 <p>如果要两边都实现这个效果可以设两个渐变，但是要注意：第一个渐变右边都是红色的，第二个渐变左边都是红色的，两个重合在一起就全变成红色了，所以再加几个颜色控制点，代码如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">&lt;!doctype html&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">  &lt;style&gt;</div><div class="line">  #demo .container&#123;</div><div class="line">    background-color: yellow;</div><div class="line">    width: 500px;</div><div class="line">    height: 500px;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  #demo .container-nav&#123;</div><div class="line">    background-color: red;</div><div class="line">    width: 300px;</div><div class="line">    height: 300px;</div><div class="line">    position: relative;</div><div class="line">    background: -webkit-radial-gradient(300px 150px ,circle,transparent 0%,transparent 50px,#ff0000 50px,#ff0000 200px,transparent 250px),-webkit-radial-gradient(0px 150px ,circle,transparent 0%,transparent 50px,#ff0000 50px,#ff0000 200px,transparent 250px);</div><div class="line">  &#125;</div><div class="line">  &lt;/style&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body id=&quot;demo&quot;&gt;</div><div class="line">  &lt;div class=&quot;container&quot;&gt;</div><div class="line">    &lt;div class=&quot;container-nav&quot;&gt;&lt;/div&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
 <p>效果如下：</p>
-<p><img src="http://7xsq2c.com2.z0.glb.clouddn.com/demo2.png" alt="demo1"></p>
-]]></content>
+<img src="/2016/04/07/background/demo2.png" alt="background" title="background">]]></content>
     
     <summary type="html">
     
@@ -247,6 +291,37 @@ wx.chooseImage({
   </entry>
   
   <entry>
+    <title>canvas做动画drawImage</title>
+    <link href="http://yoursite.com/2016/03/20/2016-03-20-canvas/"/>
+    <id>http://yoursite.com/2016/03/20/2016-03-20-canvas/</id>
+    <published>2016-03-20T02:58:39.000Z</published>
+    <updated>2016-10-10T14:00:56.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在用canvas写动画，用到drawImage</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ctx.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>drawImage可以传9个参数，第一个是图片的路径，第二三个是从图片的哪个位置开始绘制图片，四五个是绘制的宽、高，六七是在canvas放置的位置，八九是原图片的大小。</p>
+<p>也可以这样只写三个参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ctx.drawImage(img,x,y);</div></pre></td></tr></table></figure>
+<p>这样定位了图片在画布上的位置</p>
+<p>还可以写五个参数，定位图像在画布上的位置和大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ctx.drawImage(img,x,y,width,height);</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近在用canvas写动画，用到drawImage&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;ctx.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+      <category term="web前端" scheme="http://yoursite.com/categories/web%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+  </entry>
+  
+  <entry>
     <title>object-c基础总结</title>
     <link href="http://yoursite.com/2016/03/20/2016-03-20-oc/"/>
     <id>http://yoursite.com/2016/03/20/2016-03-20-oc/</id>
@@ -276,37 +351,6 @@ wx.chooseImage({
     
     
       <category term="object-c" scheme="http://yoursite.com/tags/object-c/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>canvas做动画drawImage</title>
-    <link href="http://yoursite.com/2016/03/20/2016-03-20-canvas/"/>
-    <id>http://yoursite.com/2016/03/20/2016-03-20-canvas/</id>
-    <published>2016-03-20T02:58:39.000Z</published>
-    <updated>2016-10-10T14:00:56.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近在用canvas写动画，用到drawImage</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ctx.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);</div></pre></td></tr></table></figure>
-<a id="more"></a>
-<p>drawImage可以传9个参数，第一个是图片的路径，第二三个是从图片的哪个位置开始绘制图片，四五个是绘制的宽、高，六七是在canvas放置的位置，八九是原图片的大小。</p>
-<p>也可以这样只写三个参数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ctx.drawImage(img,x,y);</div></pre></td></tr></table></figure>
-<p>这样定位了图片在画布上的位置</p>
-<p>还可以写五个参数，定位图像在画布上的位置和大小</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ctx.drawImage(img,x,y,width,height);</div></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;最近在用canvas写动画，用到drawImage&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;ctx.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-    
-    </summary>
-    
-      <category term="web前端" scheme="http://yoursite.com/categories/web%E5%89%8D%E7%AB%AF/"/>
-    
-    
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
   </entry>
   
@@ -418,8 +462,8 @@ wx.chooseImage({
   
   <entry>
     <title>css布局之垂直居中</title>
-    <link href="http://yoursite.com/2016/02/24/2016-02-24-2/"/>
-    <id>http://yoursite.com/2016/02/24/2016-02-24-2/</id>
+    <link href="http://yoursite.com/2016/02/24/2016-02-24-vertical/"/>
+    <id>http://yoursite.com/2016/02/24/2016-02-24-vertical/</id>
     <published>2016-02-24T14:58:39.000Z</published>
     <updated>2016-10-10T14:08:01.000Z</updated>
     

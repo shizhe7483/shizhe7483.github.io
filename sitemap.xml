@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2016/07/04/css/</loc>
+    
+    <lastmod>2016-10-10T14:53:17.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/04/07/background/</loc>
+    
+    <lastmod>2016-10-10T14:49:11.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/08/07/animation-step/</loc>
+    
+    <lastmod>2016-10-10T14:29:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2016/02/27/2016-02-27-flex/</loc>
     
     <lastmod>2016-10-10T14:12:38.000Z</lastmod>
@@ -9,7 +30,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/02/24/2016-02-24-2/</loc>
+    <loc>http://yoursite.com/2016/02/24/2016-02-24-vertical/</loc>
     
     <lastmod>2016-10-10T14:08:01.000Z</lastmod>
     
@@ -40,20 +61,6 @@
     <loc>http://yoursite.com/2016/04/03/2016-04-03-promise/</loc>
     
     <lastmod>2016-10-10T13:52:53.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/04/07/2016-04-07-background/</loc>
-    
-    <lastmod>2016-10-10T13:52:43.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/07/04/2016-07-04-css/</loc>
-    
-    <lastmod>2016-10-10T13:52:15.000Z</lastmod>
     
   </url>
   
