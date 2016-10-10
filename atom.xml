@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>香油的博客</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2016-10-10T13:49:25.000Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>半瓶子香油</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>如何用webpack打包一个网站应用？</title>
+    <link href="http://yoursite.com/2016/07/26/2016-07-26-webpack/"/>
+    <id>http://yoursite.com/2016/07/26/2016-07-26-webpack/</id>
+    <published>2016-07-26T09:58:39.000Z</published>
+    <updated>2016-10-10T13:49:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>随着前端技术的发展，越来越多新名词出现在我们眼前。angularjs、react、gulp、webpack、es6、babel……新技术出现，让我们了解了解用起来吧！今天我来介绍一下如何用webpack打包一个网页应用。<br><a id="more"></a></p>
+<p>一般我们写页面，大概都是这样的结构：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"> index.html</div><div class="line"> css</div><div class="line">    style.css</div><div class="line"> js</div><div class="line">     index.js</div><div class="line">...........</div></pre></td></tr></table></figure>
+<p>这样我们的html里直接引用css和js，完成一个网页应用。用webpack也类似，只是webpack把图片、css和js都编译打包成一个文件，我们只需要引用一个文件就可以了。<br>1.我们需要先安装node环境。没安装的请自行安装<br>2.在项目目录下输入npm init初始化一个node项目，输入项目名称等信息，完成后生成一个package.json文件。<br>3.在项目目录下安装webpack<br>     <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install --save-dev webpack</div></pre></td></tr></table></figure></p>
+<p>4.我们需要一个webpack.config.js文件，记录webpack配置信息。它的配置大概这样：<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">var webpack = require(&apos;webpack&apos;);</div><div class="line">var path = require(&apos;path&apos;);</div><div class="line">var buildPath = path.resolve(__dirname, &apos;build&apos;);</div><div class="line">var config = &#123;</div><div class="line">  //入口文件</div><div class="line">  entry: &#123;</div><div class="line">    index : &apos;./src/js/index.js&apos;</div><div class="line">  &#125;,</div><div class="line">  extensions: [&apos;&apos;, &apos;.js&apos;, &apos;.json&apos;, &apos;.css&apos;, &apos;.less&apos;],</div><div class="line">  output: &#123;</div><div class="line">    path: buildPath,    //编译后的文件路径</div><div class="line">    filename: &apos;app.js&apos;</div><div class="line">  &#125;,</div><div class="line">  module: &#123;</div><div class="line">    //Loaders</div><div class="line">    loaders: [</div><div class="line">      //.css 文件使用 style-loader 和 css-loader 来处理</div><div class="line">      &#123; test: /\.css$/, loader: &apos;style-loader!css-loader&apos; &#125;,</div><div class="line">      &#123; test: /\.less$/,</div><div class="line">          loader: &apos;style-loader!css-loader!less-loader&apos;</div><div class="line">      &#125;,</div><div class="line">      //.js 文件使用 babel 来编译处理</div><div class="line">      &#123; test: /\.js$/, loader: &apos;babel&apos; &#125;,</div><div class="line">      //图片文件使用 url-loader 来处理，小于8kb的直接转为base64</div><div class="line">      &#123; test: /\.(png|jpg)$/, loader: &apos;url-loader?limit=8192&apos;&#125;</div><div class="line">      ]</div><div class="line"></div><div class="line">  &#125;,</div><div class="line">&#125;;</div><div class="line"></div><div class="line">module.exports = config;</div></pre></td></tr></table></figure></p>
+<p>我们需要指定编译的入口文件和输出的目录路径，以及css和js用什么loader处理，比如我使用了less，要编译less文件，就指定less-loader，js我要用es6来写，为了兼容性，用babel来转成es5的代码。如果要使用react，也可以指定jsx等的编译方式。</p>
+<p>5.这些loader都是需要npm安装的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install --save-dev css-loader less less-loader style-loader url-loader babel babel-core babel-loader babel-preset-es2015</div></pre></td></tr></table></figure></p>
+<p>6.如果需要用babel，在项目目录下新建一个名为.babelrc的隐藏文件，里面这样写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;&quot;presets&quot;:[&quot;es2015&quot;]&#125;</div></pre></td></tr></table></figure></p>
+<p>保存。</p>
+<p>7.根据配置可以看到我们需要一个src文件夹和一个build文件夹，src放图片、css和js的源代码，build作为输出文件夹放编译后的文件。</p>
+<p>8.src/js/index.js文件作为我们的入口文件，我们在里面可以愉快地写es6的代码，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&apos;use strict&apos;;</div><div class="line">require(&apos;../css/base.css&apos;);</div><div class="line">require(&apos;../css/animate.css&apos;);</div><div class="line">require(&apos;../css/style.less&apos;);</div><div class="line">require(&apos;../js/zepto.min.js&apos;);</div><div class="line">let a = &apos;world&apos;;</div><div class="line">let hello = `hello $&#123;a&#125;`;</div><div class="line">console.log(hello);</div></pre></td></tr></table></figure></p>
+<p>可以看到css我们都通过require的方式引进来，这样webpack会把css和js打包进一个文件。<br>9.我们还差个index.html，放在项目文件夹下就可以，正常写，引入build/app.js就可以啦！<br>10.让我们试试吧，在命令行项目目录下运行webpack，哇，成功！<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Time: **2622**ms</div><div class="line"> **Asset**    **Size**  **Chunks**             **Chunk Names**</div><div class="line">**app.js**  120 kB       **0**  **[emitted]**  index</div><div class="line">    + 10 hidden modules</div></pre></td></tr></table></figure></p>
+<p>可以看到app.js已经生成啦！</p>
+<p>tips:</p>
+<ul>
+<li>如果我们不想每次修改都手工编译，直接执行webpack –watch就会自动监听文件修改，自动编译。</li>
+<li>如果我们想压缩混淆代码，执行webpack -p吧！</li>
+<li>如果配置文件不叫webpack.config.js，也可以运行webpack –config <em>*</em>.js指定配置文件。</li>
+</ul>
+<p>webpack功能强大，这里只是指引小白开始使用，想深入了解的童鞋快去看官方文档吧！<a href="http://webpack.github.io/" target="_blank" rel="external">http://webpack.github.io/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;随着前端技术的发展，越来越多新名词出现在我们眼前。angularjs、react、gulp、webpack、es6、babel……新技术出现，让我们了解了解用起来吧！今天我来介绍一下如何用webpack打包一个网页应用。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="web前端" scheme="http://yoursite.com/categories/web%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="前端工具" scheme="http://yoursite.com/tags/%E5%89%8D%E7%AB%AF%E5%B7%A5%E5%85%B7/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>你可能不知道的css</title>
+    <link href="http://yoursite.com/2016/07/04/2016-07-04-css/"/>
+    <id>http://yoursite.com/2016/07/04/2016-07-04-css/</id>
+    <published>2016-07-04T09:58:39.000Z</published>
+    <updated>2016-10-10T13:52:15.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在学习《css揭秘》这本书，作者是w3c工作组的特邀专家，设计css语言的委员之一。这本书实现了很多常见的、我们在写网页的时候不好实现的效果。阅读这本书，经常感叹“原来还可以这样”！让我们一起来学习一些效果吧！<br><a id="more"></a><br>书里提到编写可维护的css最大要素是<strong>尽量减少改动时要编辑的地方</strong><br>    比如一个按钮，我们可能写一堆font-size,line-height,padding的像素值，如果按钮需要放大，这些值都需要修改，如果用em做单位，可能改动的地方就小了</p>
+<p>1.半透明边框<br>    假设我们想给一个容器设置一层白色背景和一道半透明白色边框,body的背景会从它的半透明边框透上来。我们最开始的尝试可能是这样的:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">border: 10px solid rgba(#255,#255,#255,.5);background: white;</div></pre></td></tr></table></figure></p>
+<pre><code>但是我们会发现完全不透明！！
+我们可以使用css3的background-clip来实现我们想要的效果
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">width: 50px;</div><div class="line">height: 50px;</div><div class="line">background-color: white;</div><div class="line">border: 10px dotted rgba(#255,#255,#255,.5);</div><div class="line">background-clip: padding-box;</div></pre></td></tr></table></figure>
+<p>我们把border设成dotted 可以看到这样的效果<br><img src="http://upload-images.jianshu.io/upload_images/1287935-1450312c36e37072.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="半透明背景"></p>
+<p>background-clip是背景的范围，默认是border-box，我们把它设成padding-box，背景会沿着内边距被切掉。</p>
+<p>2.多重边框</p>
+<p>如果我们要给元素包多层边框，常常要加很多层标签，这样会污染我们的结构，我们可以思考其他的方案</p>
+<ul>
+<li>box-shadow方案<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">background: yellowgreen;</div><div class="line">box-shadow: 0 0 0 10px #655,0 0 0 15px deeppink;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1287935-9c3c27700a295d66.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="box-shadow方案"></p>
+<ul>
+<li>outline方案<br>大多数情况下，你可能只需要两层边框，outline可以使用虚线，outline-offset可以使用负值，实现缝边效果。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">background: yellowgreen;</div><div class="line"> border: 10px solid #655;</div><div class="line"> outline: 1px dashed #fff;</div><div class="line"> outline-offset: -5px;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1287935-d5f5fbf9e004a28d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="outline方案"></p>
+<p>不过，outline边框不一定会贴合 border-radius 属性产生的圆角，且只适用于双层边框的场景</p>
+<p>3.灵活的背景定位<br>如果我们想让背景在容器的右下方，我们可能会用background-position:right bottom; 如果想让背景距离右下角宽高各20px呢？你知道怎么办吗？<br>css3扩展了background-position属性，可以写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">background-position:right 20px bottom 20px;</div></pre></td></tr></table></figure></p>
+<p>或者直接指定padding，然后background-origin: content-box;<br>background-origin是css3新增的属性，默认是padding-box，指定了背景的位置。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1287935-29cafce502bbe965.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="灵活的背景定位"></p>
+<p>以上例子多是css3的属性，可能有兼容性问题，不过为我们提供了好的思路，也可以写回退方案。书里精彩的内容更多，大家也去看看吧！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近在学习《css揭秘》这本书，作者是w3c工作组的特邀专家，设计css语言的委员之一。这本书实现了很多常见的、我们在写网页的时候不好实现的效果。阅读这本书，经常感叹“原来还可以这样”！让我们一起来学习一些效果吧！&lt;br&gt;
+    
+    </summary>
+    
+      <category term="web前端" scheme="http://yoursite.com/categories/web%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="css" scheme="http://yoursite.com/tags/css/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>背景缺一部分的实现方式</title>
+    <link href="http://yoursite.com/2016/04/07/2016-04-07-background/"/>
+    <id>http://yoursite.com/2016/04/07/2016-04-07-background/</id>
+    <published>2016-04-07T09:58:39.000Z</published>
+    <updated>2016-10-10T13:52:43.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近接到一个需求，要实现背景缺两个半圆，而且缺的半圆是透明的，要显示出下面的图片。<br>思考一下，可以用css3的渐变来实现。<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">  &lt;style&gt;</div><div class="line">  #demo .container&#123;</div><div class="line">    background-color: yellow;</div><div class="line">    width: 500px;</div><div class="line">    height: 500px;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  #demo .container-nav&#123;</div><div class="line">    background-color: red;</div><div class="line">    width: 300px;</div><div class="line">    height: 300px;</div><div class="line">    position: relative;</div><div class="line">    background: -webkit-radial-gradient(0px 150px ,circle,transparent 0%,transparent 50px,#ff0000 50px)</div><div class="line">  &#125;</div><div class="line">  &lt;/style&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body id=&quot;demo&quot;&gt;</div><div class="line">  &lt;div class=&quot;container&quot;&gt;</div><div class="line">    &lt;div class=&quot;container-nav&quot;&gt;&lt;/div&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
+<p><img src="http://7xsq2c.com2.z0.glb.clouddn.com/demo1.png" alt="demo1"></p>
+<p>利用渐变，从透明到红色的径向渐变可以模拟出缺一个半圆的效果。</p>
+<p>如果要两边都实现这个效果可以设两个渐变，但是要注意：第一个渐变右边都是红色的，第二个渐变左边都是红色的，两个重合在一起就全变成红色了，所以再加几个颜色控制点，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">&lt;!doctype html&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">  &lt;style&gt;</div><div class="line">  #demo .container&#123;</div><div class="line">    background-color: yellow;</div><div class="line">    width: 500px;</div><div class="line">    height: 500px;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  #demo .container-nav&#123;</div><div class="line">    background-color: red;</div><div class="line">    width: 300px;</div><div class="line">    height: 300px;</div><div class="line">    position: relative;</div><div class="line">    background: -webkit-radial-gradient(300px 150px ,circle,transparent 0%,transparent 50px,#ff0000 50px,#ff0000 200px,transparent 250px),-webkit-radial-gradient(0px 150px ,circle,transparent 0%,transparent 50px,#ff0000 50px,#ff0000 200px,transparent 250px);</div><div class="line">  &#125;</div><div class="line">  &lt;/style&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body id=&quot;demo&quot;&gt;</div><div class="line">  &lt;div class=&quot;container&quot;&gt;</div><div class="line">    &lt;div class=&quot;container-nav&quot;&gt;&lt;/div&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p>效果如下：</p>
+<p><img src="http://7xsq2c.com2.z0.glb.clouddn.com/demo2.png" alt="demo1"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近接到一个需求，要实现背景缺两个半圆，而且缺的半圆是透明的，要显示出下面的图片。&lt;br&gt;思考一下，可以用css3的渐变来实现。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="web前端" scheme="http://yoursite.com/categories/web%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="css" scheme="http://yoursite.com/tags/css/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>es6的promise对象</title>
+    <link href="http://yoursite.com/2016/04/03/2016-04-03-promise/"/>
+    <id>http://yoursite.com/2016/04/03/2016-04-03-promise/</id>
+    <published>2016-04-03T13:58:39.000Z</published>
+    <updated>2016-10-10T13:52:53.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Promise是es6新出的异步编程的一种解决方案，比传统的回调函数和事件更加强大。</p>
+<p>所谓Promise，简单说就是一个容器，里面保存着某个未来才会结束的事件（通常是一个异步操作）的结果。<br><a id="more"></a><br>Promise对象有三种状态：Pending(进行中)、Resolved(已完成)和Rejected(已失败)。</p>
+<p>一旦状态改变，就不会再变。Promise对象的状态改变，只有两种可能：从Pending变为Resolved和从Pending变为Rejected。只要这两种情况发生，状态就凝固了，不会再变了，会一直保持这个结果。</p>
+<p>Promise可以避免层层的callback嵌套。</p>
+<p>基本用法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var promise = new Promise(function(resolve, reject) &#123;</div><div class="line">  // ... some code</div><div class="line"></div><div class="line">  if (/* 异步操作成功 */)&#123;</div><div class="line">    resolve(value);</div><div class="line">  &#125; else &#123;</div><div class="line">    reject(error);</div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>Promise实例生成以后，可以用then方法分别指定Resolved状态和Reject状态的回调函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">promise.then(function(value) &#123;</div><div class="line">  // success</div><div class="line">&#125;, function(value) &#123;</div><div class="line">  // failure</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>Promise.prototype.catch方法是.then(null, rejection)的别名，用于指定发生错误时的回调函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">getJSON(&quot;/posts.json&quot;).then(function(posts) &#123;</div><div class="line">  // ...</div><div class="line">&#125;).catch(function(error) &#123;</div><div class="line">  // 处理 getJSON 和 前一个回调函数运行时发生的错误</div><div class="line">  console.log(&apos;发生错误！&apos;, error);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>Promise.all方法接受一个数组作为参数，数组的每个元素都是Promise的实例,各个实例都是resolved，结果就是resolved，有一个是rejected，结果就是rejected。</p>
+<p>Promise.resolve方法可以将现有对象转为Promise对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Promise.resolve(&apos;foo&apos;)</div><div class="line">// 等价于</div><div class="line">new Promise(resolve =&gt; resolve(&apos;foo&apos;))</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Promise是es6新出的异步编程的一种解决方案，比传统的回调函数和事件更加强大。&lt;/p&gt;
+&lt;p&gt;所谓Promise，简单说就是一个容器，里面保存着某个未来才会结束的事件（通常是一个异步操作）的结果。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="web前端" scheme="http://yoursite.com/categories/web%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>h5上传图片</title>
+    <link href="http://yoursite.com/2016/04/02/2016-04-02-photo/"/>
+    <id>http://yoursite.com/2016/04/02/2016-04-02-photo/</id>
+    <published>2016-04-02T02:58:39.000Z</published>
+    <updated>2016-10-10T14:00:03.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近遇到一个需求，要求手机拍照上传图片或选择相册图片上传，记录一下实现方式。<br><a id="more"></a><br><code>&lt;input type=&quot;file&quot;&gt;</code></p>
+<p>可以调用拍照和上传图片的接口，测试了一下ios和android，发现在安卓手机的微信浏览器，只能选择图片，无法拍照，于是决定微信浏览器使用微信开放平台的接口，其他浏览器直接使用input。</p>
+<p>一、使用input type=file 上传</p>
+<p>html中写<code>&lt;input type=&quot;file&quot; accept=&quot;image/*&quot;/&gt;</code> accept=”image/*表示只选择图片格式的文件。js中给input绑定change事件</p>
+<p>使用h5的FileReader对象，读取图片文件转成base64，为了避免传上去的文件太大，用canvas压缩图片。<code>canvas.toDataURL(&#39;image/jpeg&#39;, 0.1)</code>前一个参数是图片格式，后一个参数是图片的质量，范围是0.1～1.预览图片可直接将base64编码放到img标签的src中。代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">$(&apos;input[type=&quot;file&quot;]&apos;).on(&apos;change&apos;,function(evt)&#123;</div><div class="line">	var file = evt.target.files[0];  </div><div class="line">  var reader = new FileReader();</div><div class="line">	reader.readAsDataURL(file);</div><div class="line">	reader.onload = function(e) &#123;</div><div class="line"> 		var img = new Image();</div><div class="line"> 		img.src = e.target.result;</div><div class="line">		img.onload = function()&#123;</div><div class="line">      	var canvas = document.createElement(&apos;canvas&apos;);</div><div class="line">    		canvas.width = img.naturalWidth;</div><div class="line">    		canvas.height = img.naturalHeight;</div><div class="line">    		var ctx = canvas.getContext(&quot;2d&quot;);</div><div class="line">    		ctx.drawImage(img, 0, 0);</div><div class="line">    		var compressBase64 = canvas.toDataURL(&apos;image/jpeg&apos;, 0.1);</div><div class="line">		&#125;  </div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>二、微信中使用微信的上传图片接口<br>引用微信的API</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script src=&quot;http://res.wx.qq.com/open/js/jweixin-1.0.0.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</div></pre></td></tr></table></figure>
+<pre><code>wx.config({
+    debug: false,
+    appId: weixinConfigInfo[&apos;appId&apos;],
+    timestamp: weixinConfigInfo[&apos;timestamp&apos;],
+    nonceStr: weixinConfigInfo[&apos;nonceStr&apos;],
+    signature: weixinConfigInfo[&apos;signature&apos;],
+    jsApiList: [
+      &quot;onMenuShareTimeline&quot;,
+        &quot;onMenuShareAppMessage&quot;,
+       &quot;onMenuShareQQ&quot;,
+      &quot;onMenuShareWeibo&quot;,
+      &quot;chooseImage&quot;,
+      &quot;uploadImage&quot;
+        ]
+  });
+  var images = {
+  localId:[],
+  serverId:[]
+};
+wx.chooseImage({
+    //count: 1, // 默认9
+    //sizeType: [&apos;original&apos;, &apos;compressed&apos;], // 可以指定是原图还是压缩图，默认二者都有
+    sourceType: [&apos;album&apos;, &apos;camera&apos;], // 可以指定来源是相册还是相机，默认二者都有
+    success: function(res) {
+      // alert(res.localIds);
+      images.localId = res.localIds;
+      if (images.localId.length === 0) {
+        alert(&apos;请先使用 chooseImage 接口选择图片&apos;);
+        return;
+      }
+      if (images.localId.length &gt; 1) {
+        alert(&apos;目前仅支持单张图片上传,请重新上传&apos;);
+        images.localId = [];
+        return;
+      }
+      var i = 0,length = images.localId.length;
+      images.serverId = [];
+         wx.uploadImage({
+              localId: images.localId[0],
+              success: function(res) {
+              //res.serverId是微信服务器返回的id，需要去微信服务器将图片下载下来，详见微信api
+              },
+              fail: function(res) {
+                alert(&apos;上传失败！&apos;);
+              }
+            });
+    }
+  });
+</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近遇到一个需求，要求手机拍照上传图片或选择相册图片上传，记录一下实现方式。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="web前端" scheme="http://yoursite.com/categories/web%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="h5" scheme="http://yoursite.com/tags/h5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>object-c基础总结</title>
+    <link href="http://yoursite.com/2016/03/20/2016-03-20-oc/"/>
+    <id>http://yoursite.com/2016/03/20/2016-03-20-oc/</id>
+    <published>2016-03-20T02:58:39.000Z</published>
+    <updated>2016-10-10T14:00:37.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在学习ios编程，总结一下object-c.<br><a id="more"></a><br>C语言中声明一个函数是这样的</p>
+<p><code>void SomeFunction(SomeType value);</code></p>
+<p>object-c中这样定义</p>
+<p><code>- (void)someMethodWithValue:(SomeType)value;</code></p>
+<p>前面的减号表示类实例的方法，类的实例可以调用；如果是加号，表示类的方法，类本身可以调用，object-c的类也是对象。</p>
+<p>多个参数的话这样传</p>
+<p><code>- (void)someMethodWithFirstValue:(SomeType)value1 secondValue:(AnotherType)value2;</code><br>value1和value2是接收方法调用时传入的参数的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@interface XYZPerson : NSObject</div><div class="line">@property (readonly) NSString *firstName;</div><div class="line">@property (readonly) NSString *lastName;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>NSString类的方法有</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (id)string;</div><div class="line">+ (id)stringWithString:(NSString *)aString;</div><div class="line">+ (id)stringWithFormat:(NSString *)format, …;</div><div class="line">+ (id)stringWithContentsOfFile:(NSString *)path encoding:(NSStringEncoding)enc error:(NSError **)error;</div><div class="line">+ (id)stringWithCString:(const char *)cString encoding:(NSStringEncoding)enc;</div></pre></td></tr></table></figure>
+<p>定义一个类要先在interface里声明，再在implementation中定义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@interface XYZPerson:NSObject</div><div class="line">@property (readonly) NSString *firstName;</div><div class="line">@property (readonly) NSString *lastName;</div><div class="line">@property (readonly) NSDate *birtyDate;</div><div class="line">- (void)sayHello;</div><div class="line">@end</div><div class="line">@implementation XYZPerson</div><div class="line"></div><div class="line">- (void)sayHello &#123;</div><div class="line">    NSLog(@&quot;Hello World!&quot;);</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近在学习ios编程，总结一下object-c.&lt;br&gt;
+    
+    </summary>
+    
+      <category term="web前端" scheme="http://yoursite.com/categories/web%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="object-c" scheme="http://yoursite.com/tags/object-c/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>canvas做动画drawImage</title>
+    <link href="http://yoursite.com/2016/03/20/2016-03-20-canvas/"/>
+    <id>http://yoursite.com/2016/03/20/2016-03-20-canvas/</id>
+    <published>2016-03-20T02:58:39.000Z</published>
+    <updated>2016-10-10T14:00:56.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在用canvas写动画，用到drawImage</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ctx.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>drawImage可以传9个参数，第一个是图片的路径，第二三个是从图片的哪个位置开始绘制图片，四五个是绘制的宽、高，六七是在canvas放置的位置，八九是原图片的大小。</p>
+<p>也可以这样只写三个参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ctx.drawImage(img,x,y);</div></pre></td></tr></table></figure>
+<p>这样定位了图片在画布上的位置</p>
+<p>还可以写五个参数，定位图像在画布上的位置和大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ctx.drawImage(img,x,y,width,height);</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近在用canvas写动画，用到drawImage&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;ctx.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+      <category term="web前端" scheme="http://yoursite.com/categories/web%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>css布局之flex布局总结</title>
+    <link href="http://yoursite.com/2016/02/27/2016-02-27-flex/"/>
+    <id>http://yoursite.com/2016/02/27/2016-02-27-flex/</id>
+    <published>2016-02-27T14:58:39.000Z</published>
+    <updated>2016-10-10T14:12:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天总结一下css3中的flex布局。<br>flex是Flexible box的缩写，也就是“弹性布局”<br><a id="more"></a><br>盒子可以设置 </p>
+<p><code>display:flex</code></p>
+<p>行内元素可以用 </p>
+<p><code>display:inline-flex</code></p>
+<p><strong>设为Flex布局以后，子元素的float、clear和vertical-align属性将失效。</strong></p>
+<p>容器默认存在两根轴：水平的主轴（main axis）和垂直的交叉轴（cross axis）。设为flex布局的容器的子元素自动成为容器成员，称为项目（flex item）。</p>
+<h2 id="容器的属性"><a href="#容器的属性" class="headerlink" title="容器的属性"></a>容器的属性</h2><p>flex容器有六个属性</p>
+<ol>
+<li>flex-direction</li>
+<li>flex-wrap</li>
+<li>flex-flow</li>
+<li>justify-content</li>
+<li>align-items</li>
+<li>align-content</li>
+</ol>
+<h3 id="flex-direction"><a href="#flex-direction" class="headerlink" title="flex-direction"></a>flex-direction</h3><p>flex-direction决定主轴方向</p>
+<figure class="highlight plain"><figcaption><span>&#123;</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">  flex-direction: row | row-reverse | column | column-reverse;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>row（默认值）：主轴为水平方向，起点在左端。</li>
+<li>row-reverse：主轴为水平方向，起点在右端。</li>
+<li>column：主轴为垂直方向，起点在上沿。</li>
+<li>column-reverse：主轴为垂直方向，起点在下沿。</li>
+</ul>
+<h3 id="flex-wrap"><a href="#flex-wrap" class="headerlink" title="flex-wrap"></a>flex-wrap</h3><p>超出容器宽度如何换行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">  flex-wrap: nowrap | wrap | wrap-reverse;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>nowrap（默认）：不换行。</li>
+<li>wrap：换行，第一行在上方。</li>
+<li>wrap-reverse：换行，第一行在下方。</li>
+</ul>
+<h3 id="flex-flow"><a href="#flex-flow" class="headerlink" title="flex-flow"></a>flex-flow</h3><p>flex-flow属性是flex-direction属性和flex-wrap属性的简写形式，默认值为row nowrap。</p>
+<h3 id="justify-content"><a href="#justify-content" class="headerlink" title="justify-content"></a>justify-content</h3><figure class="highlight plain"><figcaption><span>&#123;</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">  justify-content: flex-start | flex-end | center | space-between | space-around;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>它可能取5个值，具体对齐方式与轴的方向有关。下面假设主轴为从左到右。</p>
+<ul>
+<li>flex-start（默认值）：左对齐</li>
+<li>flex-end：右对齐</li>
+<li>center： 居中</li>
+<li>space-between：两端对齐，项目之间的间隔都相等。</li>
+<li>space-around：每个项目两侧的间隔相等。所以，项目之间的间隔比项目与边框的间隔大一倍。</li>
+</ul>
+<h3 id="align-items"><a href="#align-items" class="headerlink" title="align-items"></a>align-items</h3><p>align-items属性定义项目在交叉轴上如何对齐。</p>
+<figure class="highlight plain"><figcaption><span>&#123;</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">  align-items: flex-start | flex-end | center | baseline | stretch;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>它可能取5个值。具体的对齐方式与交叉轴的方向有关，下面假设交叉轴从上到下。</p>
+<ul>
+<li>flex-start：交叉轴的起点对齐。</li>
+<li>flex-end：交叉轴的终点对齐。</li>
+<li>center：交叉轴的中点对齐。</li>
+<li>baseline: 项目的第一行文字的基线对齐。</li>
+<li>stretch（默认值）：如果项目未设置高度或设为auto，将占满整个容器的高度。</li>
+</ul>
+<h3 id="align-content"><a href="#align-content" class="headerlink" title="align-content"></a>align-content</h3><p>align-content属性定义了多根轴线的对齐方式。如果项目只有一根轴线，该属性不起作用。</p>
+<figure class="highlight plain"><figcaption><span>&#123;</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">  align-content: flex-start | flex-end | center | space-between | space-around | stretch;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该属性可能取6个值。</p>
+<ul>
+<li>flex-start：与交叉轴的起点对齐。</li>
+<li>flex-end：与交叉轴的终点对齐。</li>
+<li>center：与交叉轴的中点对齐。</li>
+<li>space-between：与交叉轴两端对齐，轴线之间的间隔平均分布。</li>
+<li>space-around：每根轴线两侧的间隔都相等。所以，轴线之间的间隔比轴线与边框的间隔大一倍。</li>
+<li>stretch（默认值）：轴线占满整个交叉轴。</li>
+</ul>
+<h2 id="项目的属性"><a href="#项目的属性" class="headerlink" title="项目的属性"></a>项目的属性</h2><p>项目有如下属性</p>
+<ol>
+<li>order</li>
+<li>flex-grow</li>
+<li>flex-shrink</li>
+<li>flex-basis</li>
+<li>flex</li>
+<li>align-self</li>
+</ol>
+<h3 id="order"><a href="#order" class="headerlink" title="order"></a>order</h3><p>order属性定义项目的排列顺序。数值越小，排列越靠前，默认为0。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.item &#123;</div><div class="line">  order: &lt;integer&gt;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="flex-flow-1"><a href="#flex-flow-1" class="headerlink" title="flex-flow"></a>flex-flow</h3><p>flex-grow属性定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.item &#123;</div><div class="line">  flex-grow: &lt;number&gt;; /* default 0 */</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="flex-shrink"><a href="#flex-shrink" class="headerlink" title="flex-shrink"></a>flex-shrink</h3><p>flex-shrink属性定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> .item &#123;</div><div class="line">  flex-shrink: &lt;number&gt;; /* default 1 */</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="flex-basis"><a href="#flex-basis" class="headerlink" title="flex-basis"></a>flex-basis</h3><p>flex-basis属性定义了在分配多余空间之前，项目占据的主轴空间（main size）。浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为auto，即项目的本来大小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.item &#123;</div><div class="line">  flex-basis: &lt;length&gt; | auto; /* default auto */</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="flex"><a href="#flex" class="headerlink" title="flex"></a>flex</h3><p>flex属性是flex-grow, flex-shrink 和 flex-basis的简写，默认值为0 1 auto。后两个属性可选。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.item &#123;</div><div class="line">  flex: none | [ &lt;&apos;flex-grow&apos;&gt; &lt;&apos;flex-shrink&apos;&gt;? || &lt;&apos;flex-basis&apos;&gt; ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该属性有两个快捷值：auto (1 1 auto) 和 none (0 0 auto)。<br>建议优先使用这个属性，而不是单独写三个分离的属性，因为浏览器会推算相关值。</p>
+<h3 id="align-self"><a href="#align-self" class="headerlink" title="align-self"></a>align-self</h3><p>align-self属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。默认值为auto，表示继承父元素的align-items属性，如果没有父元素，则等同于stretch。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.item &#123;</div><div class="line">  align-self: auto | flex-start | flex-end | center | baseline | stretch;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>原文地址：<a href="http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;今天总结一下css3中的flex布局。&lt;br&gt;flex是Flexible box的缩写，也就是“弹性布局”&lt;br&gt;
+    
+    </summary>
+    
+      <category term="web前端" scheme="http://yoursite.com/categories/web%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="css" scheme="http://yoursite.com/tags/css/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>css布局之垂直居中</title>
+    <link href="http://yoursite.com/2016/02/24/2016-02-24-2/"/>
+    <id>http://yoursite.com/2016/02/24/2016-02-24-2/</id>
+    <published>2016-02-24T14:58:39.000Z</published>
+    <updated>2016-10-10T14:08:01.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天总结一下css中垂直居中的方法<br><a id="more"></a></p>
+<h3 id="1-display-table-cell"><a href="#1-display-table-cell" class="headerlink" title="1.display:table-cell"></a>1.display:table-cell</h3><p>外容器定宽高，设置display:table，内容器外套一层标签，设置display:table-cell;vertical-align:middle</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">  &lt;style&gt;</div><div class="line">  .container&#123;</div><div class="line">    width: 100px;</div><div class="line">    height: 100px;</div><div class="line">    background-color: yellow;</div><div class="line">    display: table;</div><div class="line">  &#125;</div><div class="line">  .container-nav&#123;</div><div class="line">    display: table-cell;</div><div class="line">    vertical-align: middle;</div><div class="line">    text-align: center;</div><div class="line">  &#125;</div><div class="line">  &lt;/style&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;  </div><div class="line">  &lt;div class=&quot;container&quot;&gt;</div><div class="line">    &lt;div class=&quot;container-nav&quot;&gt;</div><div class="line">      &lt;span&gt;middle&lt;/span&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<h3 id="2-line-height"><a href="#2-line-height" class="headerlink" title="2.line-height"></a>2.line-height</h3><p>若内层只有一行，可以设line-height与容器高度相同。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">  &lt;style&gt;</div><div class="line">  .container&#123;</div><div class="line">    width: 100px;</div><div class="line">    height: 100px;</div><div class="line">    background-color: yellow;</div><div class="line">    text-align: center;</div><div class="line">  &#125;</div><div class="line">  .container span&#123;</div><div class="line">    line-height: 100px;</div><div class="line">    text-align: center;</div><div class="line">  &#125;</div><div class="line">  &lt;/style&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;  </div><div class="line">  &lt;div class=&quot;container&quot;&gt;</div><div class="line">      &lt;span&gt;middle&lt;/span&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<h3 id="3-给出一致的padding-top和padding-bottom"><a href="#3-给出一致的padding-top和padding-bottom" class="headerlink" title="3.给出一致的padding-top和padding-bottom"></a>3.给出一致的padding-top和padding-bottom</h3><h3 id="4-margin-top为负的高度的一半"><a href="#4-margin-top为负的高度的一半" class="headerlink" title="4.margin-top为负的高度的一半"></a>4.margin-top为负的高度的一半</h3><h3 id="5-margin"><a href="#5-margin" class="headerlink" title="5.margin"></a>5.margin</h3><p>内容器设定高度，设置绝对定位，top,left,right,bottom都为0，margin:auto</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">  &lt;style&gt;</div><div class="line">  .container&#123;</div><div class="line">    width: 100px;</div><div class="line">    height: 100px;</div><div class="line">    background-color: yellow;</div><div class="line">    position: relative;</div><div class="line">  &#125;</div><div class="line">  .container-nav&#123;</div><div class="line">    height: 50px;</div><div class="line">    background-color: red;</div><div class="line">    margin: auto;  </div><div class="line">    position: absolute;  </div><div class="line">    top: 0; </div><div class="line">    left: 0; </div><div class="line">    bottom: 0; </div><div class="line">    right: 0; </div><div class="line">  &#125;</div><div class="line">  &lt;/style&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;  </div><div class="line">  &lt;div class=&quot;container&quot;&gt;</div><div class="line">    &lt;div class=&quot;container-nav&quot;&gt;    &lt;/div&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<h3 id="6-transform"><a href="#6-transform" class="headerlink" title="6.transform"></a>6.transform</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">  &lt;style&gt;</div><div class="line">  .container&#123;</div><div class="line">    width: 100px;</div><div class="line">    height: 100px;</div><div class="line">    background-color: yellow;</div><div class="line">    position: relative;</div><div class="line">  &#125;</div><div class="line">  .container-nav&#123;</div><div class="line">    height: 50px;</div><div class="line">    background-color: red;</div><div class="line">    width: 50%;  </div><div class="line">    margin: auto;  </div><div class="line">    position: absolute;  </div><div class="line">    top: 50%; </div><div class="line">    left: 50%;  </div><div class="line">    -webkit-transform: translate(-50%,-50%);  </div><div class="line">    -ms-transform: translate(-50%,-50%);  </div><div class="line">    transform: translate(-50%,-50%);  </div><div class="line">  &#125;</div><div class="line">  &lt;/style&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;  </div><div class="line">  &lt;div class=&quot;container&quot;&gt;</div><div class="line">    &lt;div class=&quot;container-nav&quot;&gt;    &lt;/div&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<h3 id="7-伪元素"><a href="#7-伪元素" class="headerlink" title="7.伪元素"></a>7.伪元素</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">  &lt;style&gt;</div><div class="line">  .container&#123;</div><div class="line">    width: 100px;</div><div class="line">    height: 100px;</div><div class="line">    background-color: yellow;</div><div class="line">    text-align: center;</div><div class="line">  &#125;</div><div class="line">  .container-nav,.container:after&#123;</div><div class="line">    display: inline-block;</div><div class="line">    vertical-align: middle;</div><div class="line">    background-color: red;</div><div class="line">  &#125;</div><div class="line">  .container-nav&#123;</div><div class="line">    width: 50px;</div><div class="line">    height: 50px;</div><div class="line">  &#125;</div><div class="line">  .container:after&#123;</div><div class="line">    content: &apos;&apos;;</div><div class="line">    height: 100%;</div><div class="line">  &#125;</div><div class="line">  &lt;/style&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;  </div><div class="line">  &lt;div class=&quot;container&quot;&gt;</div><div class="line">    &lt;div class=&quot;container-nav&quot;&gt;    &lt;/div&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;今天总结一下css中垂直居中的方法&lt;br&gt;
+    
+    </summary>
+    
+      <category term="web前端" scheme="http://yoursite.com/categories/web%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="css" scheme="http://yoursite.com/tags/css/"/>
+    
+  </entry>
+  
+</feed>
